@@ -1,0 +1,34 @@
+{
+	code: "respawngear",
+	shape: { base: "item/gear-respawn" },
+	texture: { base: "item/resource/respawngear" },
+	creativeinventory: { "general": ["*"], "items": ["*"] },
+	class: "ItemTemporalGear",
+	maxstacksize: 1,
+	materialDensity: 1,
+	lightHsv: [60, 7, 27],
+	guiTransform: {
+		translation: { x: 3, y: 1, z: 0 },
+		rotation: { x: 145, y: -12, z: 0 },
+		origin: { x: 0.5, y: 0.0625, z: 0.5 },
+		scale: 2.5
+	},
+	fpHandTransform: {
+		translation: { x: 0, y: 0.2, z: 0 },
+		rotation: { x: 15, y: 0, z: 0 },
+		origin: { x: 0.5, y: 0, z: 0.5 },
+		scale: 1.8
+	},
+	tpHandTransform: {
+		translation: { x: -0.95, y: -0.11, z: -0.85 },
+		rotation: { x: 0, y: -89, z: 5 },
+		origin: { x: 0.5, y: 0.0625, z: 0.5 },
+		scale: 0.61
+	},
+	groundTransform: {
+		translation: { x: 0, y: 0, z: 0 },
+		rotation: { x: 0, y: 0, z: 0 },
+		origin: { x: 0.39, y: 0, z: 0.47 },
+		scale: 3.76
+	}
+}

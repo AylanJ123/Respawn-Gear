@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="RespawnGear/RespawnGear.csproj" />
+  <Project Path="ZZCakeBuild/CakeBuild.csproj" />
+</Solution>

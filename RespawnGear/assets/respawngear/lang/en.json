@@ -1,3 +1,4 @@
 {
 	"item-respawngear": "Respawn Gear",
+	"itemdesc-respawngear": "<font color=\"#99c9f9\"><i>Allows to place a special respawn point. This does not override a Temporal Gear's spawn point. Player will appear here after meeting death if there the gear is charged. The gear charges itself over time.'</i></font><br>"
 }

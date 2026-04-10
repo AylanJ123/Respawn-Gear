@@ -7,13 +7,11 @@ using Vintagestory.Server;
 
 namespace RespawnGear.Patches
 {
-    public class RespawnPatches
+    public static class RespawnPatches
     {
-        [HarmonyPatch(typeof(ServerMain))]
-        [HarmonyPatch(nameof(ServerMain.GetSpawnPosition))]
-        class GetSpawnPositionPatch
+        public static class SpawnPositionPatch
         {
-            static bool Prefix(ServerMain __instance, ref FuzzyEntityPos __result, string playerUID)
+            public static bool Prefix(ServerMain __instance, ref FuzzyEntityPos __result, string playerUID)
             {
                 EntityPlayer playerEntity = __instance.PlayerByUid(playerUID).Entity;
                 if (playerEntity.Alive) return true;
@@ -47,44 +45,5 @@ namespace RespawnGear.Patches
                 return true;
             }
         }
-
-        //[HarmonyPatch(typeof(ServerSystemEntitySimulation))]
-        //[HarmonyPatch(nameof(ServerSystemEntitySimulation.))]
-        //class GetSpawnPositionPatch
-        //{
-        //    static bool Prefix(ServerMain __instance, ref FuzzyEntityPos __result, string playerUID)
-        //    {
-        //        Entity player = __instance.PlayerByUid(playerUID).Entity;
-        //        EntityBehaviorRespawnable respawnable = player.GetBehavior<EntityBehaviorRespawnable>();
-        //        if (respawnable.Charges > 0)
-        //        {
-        //            FuzzyEntityPos fuzzyEntityPos = new FuzzyEntityPos(
-        //                respawnable.PosX, respawnable.PosY, respawnable.PosZ
-        //            );
-        //            __result = fuzzyEntityPos;
-        //        }
-        //        return true;
-        //    }
-        //}
-
-        //[HarmonyPatch(typeof(ServerSystemEntitySimulation))]
-        //[HarmonyPatch(nameof(ServerSystemEntitySimulation.OnPlayerRespawn))]
-        //class GetSpawnPositionPatch
-        //{
-        //    static bool Prefix(ServerMain __instance, ref FuzzyEntityPos __result, string playerUID)
-        //    {
-        //        Entity player = __instance.PlayerByUid(playerUID).Entity;
-        //        EntityBehaviorRespawnable respawnable = player.GetBehavior<EntityBehaviorRespawnable>();
-        //        if (respawnable.Charges > 0)
-        //        {
-        //            FuzzyEntityPos fuzzyEntityPos = new FuzzyEntityPos(
-        //                respawnable.PosX, respawnable.PosY, respawnable.PosZ
-        //            );
-        //            __result = fuzzyEntityPos;
-        //        }
-        //        return true;
-        //    }
-        //}
-
     }
 }

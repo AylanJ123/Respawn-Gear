@@ -2,12 +2,16 @@
 using Vintagestory.API.Common;
 using RespawnGear.EntityBehaviors;
 using RespawnGear.ItemClasses;
+using Vintagestory.API.Server;
+using Vintagestory.Server;
+using RespawnGear.Patches;
 
 namespace RespawnGear
 {
     public class RespawnGearModSystem : ModSystem
     {
         private static RespawnGearModSystem? Instance;
+        private static Harmony? Harmony;
 
         public override void Start(ICoreAPI api)
         {
@@ -26,19 +30,20 @@ namespace RespawnGear
             );
 
             // Patch with Harmony
-            Harmony harmony = new($"{Mod.Info.Authors[0]}:{Mod.Info.ModID}");
-            harmony.PatchAll();
+            Harmony = new($"{Mod.Info.Authors[0]}:{Mod.Info.ModID}");
         }
 
-        /// <summary> Logs a message and gives it a format </summary>
-        /// <param name="isError"> If true, appends a custom string to help during log diving </param>
-        public static void Log(string msg, bool isError = false)
+        public override void StartServerSide(ICoreServerAPI api)
         {
-            if (Instance != null)
-                Instance.Mod.Logger.Notification((isError ? "[RGCUSTOMERROR]" : "") + msg);
-            else
-                throw new System.Exception("Attempted to access Singleton too early to log: " + msg);
+            base.StartServerSide(api);
+            var originalMethod = AccessTools.Method(typeof(ServerMain), nameof(ServerMain.GetSpawnPosition));
+            var prefixMethod = SymbolExtensions.GetMethodInfo(() => RespawnPatches.SpawnPositionPatch.Prefix);
+            Harmony?.Patch(originalMethod, new HarmonyMethod(prefixMethod));
         }
 
+        /// <summary> Logs a message </summary>
+        public static void Log(string msg) => Instance?.Mod.Logger.Notification(msg);
+
+        public static void LogError(string msg) => Instance?.Mod.Logger.Error(msg);
     }
 }

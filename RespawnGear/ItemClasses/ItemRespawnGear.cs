@@ -14,7 +14,7 @@ namespace RespawnGear.ItemClasses
     public class ItemRespawnGear : Item
     {
         public static readonly string ITEM_ID = "respawngear";
-        public static float secondsSince;
+        private static float secondsSince;
 
         public SimpleParticleProperties? particlesHeld;
 

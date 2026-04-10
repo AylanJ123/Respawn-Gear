@@ -64,7 +64,7 @@ namespace RespawnGear.EntityBehaviors
             }
             set
             {
-                entity.WatchedAttributes.GetTreeAttribute(BEHAVIOR_ID).SetFloat("charges", value);
+                entity.WatchedAttributes.GetTreeAttribute(BEHAVIOR_ID).SetFloat("pitch", value);
                 entity.WatchedAttributes.MarkPathDirty(BEHAVIOR_ID);
             }
         }
@@ -127,12 +127,12 @@ namespace RespawnGear.EntityBehaviors
             }
             else
             {
-                double hoursPerCharge = 1; // TODO, 1 day hardcoded, abstract to a config
+                double hoursPerCharge = 24; // TODO, 24 hours hardcoded, abstract to a config
 
                 double elapsed = entity.World.Calendar.TotalHours - Timestamp;
                 int chargesGained = (int) (elapsed / hoursPerCharge);
 
-                Charges = Math.Clamp(Charges + chargesGained, 0, 3); // TODO, 3 charges are hardcoded, to the config it goes
+                Charges = Math.Clamp(Charges + chargesGained, 0, 3); // TODO, 3 charges hardcoded, to the config it goes
                 Timestamp = entity.World.Calendar.TotalHours - (elapsed % hoursPerCharge);
             }
         }

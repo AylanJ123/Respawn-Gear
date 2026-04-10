@@ -1,0 +1,30 @@
+{
+  "ingredientPattern": "_R_,CKC,_T_",
+  "width": 3,
+  "height": 3,
+  "ingredients": {
+    "R": {
+      "type": "item",
+      "code": "game:gear-rusty"
+    },
+    "T": {
+      "type": "item",
+      "code": "game:gear-temporal"
+    },
+    "C": {
+      "type": "item",
+      "quantity": 2,
+      "code": "game:nugget-*"
+    },
+    "K": {
+      "type": "item",
+      "code": "game:knife-generic-*",
+      "isTool": true,
+      "toolDurabilityCost": 10
+    }
+  },
+  "output": {
+    "type": "item",
+    "code": "respawngear:respawngear"
+  }
+}

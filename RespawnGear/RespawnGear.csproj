@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net10.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <OutputPath>bin\$(Configuration)\Mods\mod</OutputPath>
     <Nullable>enable</Nullable>
@@ -61,5 +61,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
   </Content>
 </ItemGroup>
+
+<ProjectExtensions><VisualStudio><UserProperties assets_4respawngear_4itemtypes_4resource_4respawngear_1json__JsonSchema="https://jsonapi.org/schema" /></VisualStudio></ProjectExtensions>
 
 </Project>

@@ -5,7 +5,7 @@ using Vintagestory.API.Common.Entities;
 using Vintagestory.API.Server;
 using Vintagestory.Server;
 
-namespace RespawnGear.Patches
+namespace RespawnGear.Patching
 {
     public static class RespawnPatches
     {

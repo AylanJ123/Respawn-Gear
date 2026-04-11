@@ -4,7 +4,8 @@ using RespawnGear.EntityBehaviors;
 using RespawnGear.ItemClasses;
 using Vintagestory.API.Server;
 using Vintagestory.Server;
-using RespawnGear.Patches;
+using System.Reflection;
+using RespawnGear.Patching;
 
 namespace RespawnGear
 {
@@ -36,8 +37,10 @@ namespace RespawnGear
         public override void StartServerSide(ICoreServerAPI api)
         {
             base.StartServerSide(api);
-            var originalMethod = AccessTools.Method(typeof(ServerMain), nameof(ServerMain.GetSpawnPosition));
-            var prefixMethod = SymbolExtensions.GetMethodInfo(() => RespawnPatches.SpawnPositionPatch.Prefix);
+            MethodInfo originalMethod = AccessTools.Method(typeof(ServerMain), nameof(ServerMain.GetSpawnPosition));
+            MethodInfo prefixMethod = SymbolExtensions.GetMethodInfo(() => RespawnPatches.SpawnPositionPatch.Prefix);
+            Patches patches = Harmony.GetPatchInfo(originalMethod);
+            if (Harmony != null && patches != null && patches.Owners.Contains(Harmony.Id)) return;
             Harmony?.Patch(originalMethod, new HarmonyMethod(prefixMethod));
         }
 

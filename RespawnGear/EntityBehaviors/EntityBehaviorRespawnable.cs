@@ -127,7 +127,7 @@ namespace RespawnGear.EntityBehaviors
             }
             else
             {
-                double hoursPerCharge = 24; // TODO, 24 hours hardcoded, abstract to a config
+                double hoursPerCharge = 48; // TODO, 48 hours hardcoded, abstract to a config
 
                 double elapsed = entity.World.Calendar.TotalHours - Timestamp;
                 int chargesGained = (int) (elapsed / hoursPerCharge);

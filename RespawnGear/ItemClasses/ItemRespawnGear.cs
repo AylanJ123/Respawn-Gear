@@ -3,6 +3,7 @@ using System;
 using System.Linq;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
+using Vintagestory.API.Common.Entities;
 using Vintagestory.API.MathTools;
 using Vintagestory.API.Server;
 using Vintagestory.API.Util;
@@ -14,15 +15,20 @@ namespace RespawnGear.ItemClasses
     public class ItemRespawnGear : Item
     {
         public static readonly string ITEM_ID = "respawngear";
-        private static float secondsSince;
 
+        public float secondsSince;
         public SimpleParticleProperties? particlesHeld;
 
+
         /// <inheritdoc cref="CollectibleObject.OnLoaded(ICoreAPI)"/>
-        /// <remarks> Loads particles when item is being held </remarks>
+        /// <remarks> Loads particles when the item finally loads </remarks>
         public override void OnLoaded(ICoreAPI api)
         {
             base.OnLoaded(api);
+            if (api.Side == EnumAppSide.Client)
+            {
+                secondsSince = api.World.Calendar.ElapsedSeconds;
+            }
             particlesHeld = new SimpleParticleProperties(1f, 1f, ColorUtil.ToRgba(50, 220, 220, 220), new Vec3d(), new Vec3d(), new Vec3f(-0.1f, -0.1f, -0.1f), new Vec3f(0.1f, 0.1f, 0.1f), 1.5f, 0f, 0.5f, 0.75f)
             {
                 SizeEvolve = EvolvingNatFloat.create(EnumTransformFunction.QUADRATIC, -0.6f)
@@ -76,6 +82,7 @@ namespace RespawnGear.ItemClasses
             if (byEntity.World.Side == EnumAppSide.Client &&
                 byEntity.World.Calendar.ElapsedSeconds - secondsSince < 60)
             {
+                byEntity.TryStopHandAction(true);
                 return;
             }
             if (byEntity.World is IClientWorldAccessor clientWorldAccessor)
@@ -163,15 +170,13 @@ namespace RespawnGear.ItemClasses
                 if (byEntity.World.Side == EnumAppSide.Server && byEntity is EntityPlayer player)
                 {
                     // Here is where the magic happens
-                    EntityBehaviorRespawnable? respawnable = 
-                        byEntity.GetBehavior<EntityBehaviorRespawnable>()
-                        ?? throw new Exception("The respawnable behavior is not present on the player");
-                    respawnable.PosX = (float) byEntity.ServerPos.X;
-                    respawnable.PosY = (float) byEntity.ServerPos.Y;
-                    respawnable.PosZ = (float) byEntity.ServerPos.Z;
-                    respawnable.Yaw = byEntity.ServerPos.Yaw;
-                    respawnable.Pitch = byEntity.ServerPos.Pitch;
-                    respawnable.CalculateTimestampAndCharges();
+                    EntityBehaviorRespawnable? respawnable = byEntity.GetBehavior<EntityBehaviorRespawnable>();
+                    if (respawnable == null)
+                    {
+                        RespawnGearModSystem.LogError("The respawnable behavior is not present on the player");
+                        return;
+                    }
+                    respawnable.SetSpawnPosition(blockSel.Position.AsVec3i + new Vec3i(0, 1, 0), byEntity.Pos.Yaw, byEntity.Pos.Pitch);
                     ICoreServerAPI serverAPI = (ICoreServerAPI) byEntity.Api;
                     serverAPI.SendMessage( // TODO: This message is hardcoded, put into lang
                         player.Player, 0,

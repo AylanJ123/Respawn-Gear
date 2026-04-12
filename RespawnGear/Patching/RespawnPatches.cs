@@ -34,7 +34,7 @@ namespace RespawnGear.Patching
                             EnumChatType.Notification
                         );
                     FuzzyEntityPos fuzzyEntityPos = new(
-                        respawnable.PosX, respawnable.PosY, respawnable.PosZ
+                        respawnable.Position.X, respawnable.Position.Y, respawnable.Position.Z
                     ) {
                         Yaw = respawnable.Yaw,
                         Pitch = respawnable.Pitch,

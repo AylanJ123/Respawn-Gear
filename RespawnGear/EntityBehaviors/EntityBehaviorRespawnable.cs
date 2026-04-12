@@ -1,130 +1,74 @@
 ﻿using System;
 using Vintagestory.API.Common.Entities;
 using Vintagestory.API.Datastructures;
+using Vintagestory.API.MathTools;
 
 namespace RespawnGear.EntityBehaviors
 {
     public class EntityBehaviorRespawnable(Entity entity) : EntityBehavior(entity)
     {
         public static readonly string BEHAVIOR_ID = "respawninfo";
+        public override string PropertyName() => BEHAVIOR_ID;
 
-        public float PosX
+        #region Properties
+        ITreeAttribute Tree
         {
-            get
-            {
-                return entity.WatchedAttributes.GetTreeAttribute(BEHAVIOR_ID).GetFloat("x");
-            }
-            set
-            {
-                entity.WatchedAttributes.GetTreeAttribute(BEHAVIOR_ID).SetFloat("x", value);
-                entity.WatchedAttributes.MarkPathDirty(BEHAVIOR_ID);
-            }
+            get => entity.WatchedAttributes.GetTreeAttribute(BEHAVIOR_ID);
+            set => entity.WatchedAttributes.SetAttribute(BEHAVIOR_ID, value);
         }
-        public float PosY
+        public Vec3i Position
         {
-            get
-            {
-                return entity.WatchedAttributes.GetTreeAttribute(BEHAVIOR_ID).GetFloat("y");
-            }
-            set
-            {
-                entity.WatchedAttributes.GetTreeAttribute(BEHAVIOR_ID).SetFloat("y", value);
-                entity.WatchedAttributes.MarkPathDirty(BEHAVIOR_ID);
-            }
-        }
-        public float PosZ
-        {
-            get
-            {
-                return entity.WatchedAttributes.GetTreeAttribute(BEHAVIOR_ID).GetFloat("z");
-            }
-            set
-            {
-                entity.WatchedAttributes.GetTreeAttribute(BEHAVIOR_ID).SetFloat("z", value);
-                entity.WatchedAttributes.MarkPathDirty(BEHAVIOR_ID);
-            }
+            get => Tree.GetVec3i("position");
+            set => InTree(t => t.SetVec3i("position", value));
         }
         public float Yaw
         {
-            get
-            {
-                return entity.WatchedAttributes.GetTreeAttribute(BEHAVIOR_ID).GetFloat("yaw");
-            }
-            set
-            {
-                entity.WatchedAttributes.GetTreeAttribute(BEHAVIOR_ID).SetFloat("yaw", value);
-                entity.WatchedAttributes.MarkPathDirty(BEHAVIOR_ID);
-            }
+            get => Tree.GetFloat("yaw");
+            set => InTree(t => t.SetFloat("yaw", value));
         }
         public float Pitch
         {
-            get
-            {
-                return entity.WatchedAttributes.GetTreeAttribute(BEHAVIOR_ID).GetFloat("pitch");
-            }
-            set
-            {
-                entity.WatchedAttributes.GetTreeAttribute(BEHAVIOR_ID).SetFloat("pitch", value);
-                entity.WatchedAttributes.MarkPathDirty(BEHAVIOR_ID);
-            }
+            get => Tree.GetFloat("pitch");
+            set => InTree(t => t.SetFloat("pitch", value));
         }
-
         public double Timestamp
         {
-            get
-            {
-                return entity.WatchedAttributes.GetTreeAttribute(BEHAVIOR_ID).GetDouble("timestamp");
-            }
-            set
-            {
-                entity.WatchedAttributes.GetTreeAttribute(BEHAVIOR_ID).SetDouble("timestamp", value);
-                entity.WatchedAttributes.MarkPathDirty(BEHAVIOR_ID);
-            }
+            get => Tree.GetDouble("timestamp");
+            set => InTree(t => t.SetDouble("timestamp", value));
         }
         public int Charges
         {
-            get
-            {
-                return entity.WatchedAttributes.GetTreeAttribute(BEHAVIOR_ID).GetInt("charges");
-            }
-            set
-            {
-                entity.WatchedAttributes.GetTreeAttribute(BEHAVIOR_ID).SetInt("charges", value);
-                entity.WatchedAttributes.MarkPathDirty(BEHAVIOR_ID);
-            }
+            get => Tree.GetInt("charges");
+            set => InTree(t => t.SetInt("charges", value));
         }
+        #endregion
 
         public override void Initialize(EntityProperties properties, JsonObject typeAttributes)
         {
-            ITreeAttribute treeAttribute = entity.WatchedAttributes.GetTreeAttribute(BEHAVIOR_ID);
-            if (treeAttribute == null)
+            if (Tree == null)
             {
-                treeAttribute = new TreeAttribute();
-                entity.WatchedAttributes.SetAttribute(BEHAVIOR_ID, treeAttribute);
-
-                PosX = typeAttributes["x"].AsFloat();
-                PosY = typeAttributes["y"].AsFloat();
-                PosZ = typeAttributes["z"].AsFloat();
-                Yaw = typeAttributes["yaw"].AsFloat();
-                Pitch = typeAttributes["pitch"].AsFloat();
-
-                Timestamp = typeAttributes["timestamp"].AsDouble(defaultValue: -1);
-                Charges = typeAttributes["charges"].AsInt();
-
+                Tree = new TreeAttribute();
+                Timestamp = -1;
+                Charges = 0;
             }
         }
 
-        /// <summary>
-        /// Updates the current timestamp and adds the corresponding charges
-        /// </summary>
+        /// <summary> Sets the modded spawn position and calculates the timestamp and charges </summary>
+        /// <param name="pos"> A <see cref="Vec3i"/> where the spawn point will be placed at </param>
+        /// <param name="yaw"> Horizontal rotation </param>
+        /// <param name="pitch"> Vertical rotation </param>
+        public void SetSpawnPosition(Vec3i pos, float yaw, float pitch)
+        {
+            Position = pos;
+            Yaw = yaw;
+            Pitch = pitch;
+            CalculateTimestampAndCharges();
+        }
+
+        /// <summary> Updates the current timestamp and adds the corresponding charges </summary>
         public void CalculateTimestampAndCharges()
         {
-            if (Timestamp == -1)
-            {
-                // This is the first time the player uses the gear
-                Charges = 0;
-                Timestamp = entity.World.Calendar.TotalHours;
-            }
+            if (Timestamp == -1) Timestamp = entity.World.Calendar.TotalHours;
             else
             {
                 double hoursPerCharge = 48; // TODO, 48 hours hardcoded, abstract to a config
@@ -137,9 +81,12 @@ namespace RespawnGear.EntityBehaviors
             }
         }
 
-        public override string PropertyName()
+        /// <summary> Outsources tree insertion by receiving a lambda that expects an <see cref="ITreeAttribute"/> </summary>
+        /// <param name="set"> A lambda that inserts a propertie into the tree of watched attributes </param>
+        private void InTree(Action<ITreeAttribute> set)
         {
-            return BEHAVIOR_ID;
+            set(Tree);
+            entity.WatchedAttributes.MarkPathDirty(BEHAVIOR_ID);
         }
     }
 }

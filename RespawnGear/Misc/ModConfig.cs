@@ -33,7 +33,7 @@ namespace RespawnGear.Misc
 
         static ModConfig GetDefault() => new()
         {
-            InitCharges = 0,
+            InitCharges = 1,
             MaxCharges = 3,
             HoursPerCharge = 48,
             PublicHumiliation = true

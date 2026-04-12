@@ -1,5 +1,5 @@
 {
-  "Type": 2,
+  "Type": "Code",
   "TextureSize": 32,
   "Name": "Respawn Gear",
   "Version": "1.0.0",
@@ -7,7 +7,6 @@
   "IconPath": "modicon.png",
   "Description": "Adds a recharging gear that sets your respawn location.",
   "Website": "",
-  "CoreMod": false,
   "ModID": "respawngear",
   "Authors": [
     "AylanJ123",

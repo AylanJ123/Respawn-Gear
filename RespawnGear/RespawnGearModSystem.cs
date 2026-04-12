@@ -39,9 +39,13 @@ namespace RespawnGear
             base.StartServerSide(api);
             MethodInfo originalMethod = AccessTools.Method(typeof(ServerMain), nameof(ServerMain.GetSpawnPosition));
             MethodInfo prefixMethod = SymbolExtensions.GetMethodInfo(() => RespawnPatches.SpawnPositionPatch.Prefix);
-            Patches patches = Harmony.GetPatchInfo(originalMethod);
-            if (Harmony != null && patches != null && patches.Owners.Contains(Harmony.Id)) return;
             Harmony?.Patch(originalMethod, new HarmonyMethod(prefixMethod));
+        }
+
+        public override void Dispose()
+        {
+            Harmony?.UnpatchAll(Harmony.Id);
+            base.Dispose();
         }
 
         /// <summary> Logs a message </summary>

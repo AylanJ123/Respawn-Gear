@@ -1,8 +1,8 @@
 ﻿using HarmonyLib;
 using RespawnGear.EntityBehaviors;
+using RespawnGear.Misc;
 using Vintagestory.API.Common;
 using Vintagestory.API.Common.Entities;
-using Vintagestory.API.Server;
 using Vintagestory.Server;
 
 namespace RespawnGear.Patching
@@ -14,25 +14,19 @@ namespace RespawnGear.Patching
             public static bool Prefix(ServerMain __instance, ref FuzzyEntityPos __result, string playerUID)
             {
                 EntityPlayer playerEntity = __instance.PlayerByUid(playerUID).Entity;
+                if (playerEntity.World == null || playerEntity.World.Side != EnumAppSide.Server) return true;
                 if (playerEntity.Alive) return true;
                 EntityBehaviorRespawnable? respawnable = playerEntity.GetBehavior<EntityBehaviorRespawnable>();
                 if (respawnable != null)
                 {
-                    ICoreServerAPI serverAPI = (ICoreServerAPI) playerEntity.Api;
                     respawnable.CalculateTimestampAndCharges();
                     if (respawnable.Charges <= 0)
                     {
-                        serverAPI.SendMessageToGroup( // TODO: This message is hardcoded, put into lang
-                            0, $"The player {playerEntity.GetName()} has no charges left, into the wilderness you go",
-                            EnumChatType.Notification
-                        );
+                        SendMessage(playerEntity.Player, $"The player {playerEntity.GetName()} has no charges left, into the wilderness you go");
                         return true;
                     }
                     respawnable.Charges -= 1;
-                    serverAPI.SendMessageToGroup( // TODO: This message is hardcoded, put into lang
-                            0, $"The player {playerEntity.GetName()} has {respawnable.Charges} charges left",
-                            EnumChatType.Notification
-                        );
+                    SendMessage(playerEntity.Player, $"The player {playerEntity.GetName()} has {respawnable.Charges} charges left");
                     FuzzyEntityPos fuzzyEntityPos = new(
                         respawnable.Position.X, respawnable.Position.Y, respawnable.Position.Z
                     ) {
@@ -44,6 +38,15 @@ namespace RespawnGear.Patching
                 }
                 return true;
             }
+
+            private static void SendMessage(IPlayer player, string msg)
+            {
+                if (RespawnGearModSystem.Config.PublicHumiliation)
+                    ModHelper.ServerHelper.BroadcastMessage(msg);
+                else
+                    ModHelper.ServerHelper.Message(player, msg);
+            }
+
         }
     }
 }

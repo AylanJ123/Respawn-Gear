@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RespawnGear.Misc;
+using System;
 using Vintagestory.API.Common.Entities;
 using Vintagestory.API.Datastructures;
 using Vintagestory.API.MathTools;
@@ -49,7 +50,7 @@ namespace RespawnGear.EntityBehaviors
             {
                 Tree = new TreeAttribute();
                 Timestamp = -1;
-                Charges = 0;
+                Charges = RespawnGearModSystem.Config.InitCharges;
             }
         }
 
@@ -71,12 +72,12 @@ namespace RespawnGear.EntityBehaviors
             if (Timestamp == -1) Timestamp = entity.World.Calendar.TotalHours;
             else
             {
-                double hoursPerCharge = 48; // TODO, 48 hours hardcoded, abstract to a config
+                double hoursPerCharge = RespawnGearModSystem.Config.HoursPerCharge;
 
                 double elapsed = entity.World.Calendar.TotalHours - Timestamp;
                 int chargesGained = (int) (elapsed / hoursPerCharge);
 
-                Charges = Math.Clamp(Charges + chargesGained, 0, 3); // TODO, 3 charges hardcoded, to the config it goes
+                Charges = Math.Clamp(Charges + chargesGained, 0, RespawnGearModSystem.Config.MaxCharges);
                 Timestamp = entity.World.Calendar.TotalHours - (elapsed % hoursPerCharge);
             }
         }

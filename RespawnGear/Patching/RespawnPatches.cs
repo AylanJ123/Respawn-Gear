@@ -17,7 +17,7 @@ namespace RespawnGear.Patching
                 if (playerEntity.World == null || playerEntity.World.Side != EnumAppSide.Server) return true;
                 if (playerEntity.Alive) return true;
                 EntityBehaviorRespawnable? respawnable = playerEntity.GetBehavior<EntityBehaviorRespawnable>();
-                if (respawnable != null)
+                if (respawnable != null && respawnable.Position != null) // Hasn't ever set up the point
                 {
                     respawnable.CalculateTimestampAndCharges();
                     if (respawnable.Charges <= 0)

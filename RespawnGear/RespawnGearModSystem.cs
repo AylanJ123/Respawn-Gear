@@ -42,14 +42,21 @@ namespace RespawnGear
         public override void StartServerSide(ICoreServerAPI api)
         {
             base.StartServerSide(api);
+            CommandsHandler.InitializeCommands(api);
 
             api.RegisterEntityBehaviorClass(
                 $"{Mod.Info.ModID}:{EntityBehaviorRespawnable.BEHAVIOR_ID}",
                 typeof(EntityBehaviorRespawnable)
             );
-
             MethodInfo originalMethod = AccessTools.Method(typeof(ServerMain), nameof(ServerMain.GetSpawnPosition));
             MethodInfo prefixMethod = SymbolExtensions.GetMethodInfo(() => RespawnPatches.SpawnPositionPatch.Prefix);
+            Patches patches = Harmony.GetPatchInfo(originalMethod);
+            Harmony?.Unpatch(originalMethod, prefixMethod); // Older versions fix
+            if (Harmony != null && patches != null && patches.Owners.Contains(Harmony.Id))
+            {
+                ModHelper.Logger.Error("Method is already patched but the code to kickstart the server side ran again, why? Skipping patch.");
+                return;
+            }
             Harmony?.Patch(originalMethod, new HarmonyMethod(prefixMethod));
         }
 

@@ -82,7 +82,6 @@ namespace RespawnGear.ItemClasses
 
         public override void OnHeldInteractStart(ItemSlot slot, EntityAgent byEntity, BlockSelection blockSel, EntitySelection entitySel, bool firstEvent, ref EnumHandHandling handHandling)
         {
-            ModHelper.Logger.Warning(byEntity.World.Calendar.ElapsedSeconds.ToString() + ", " + lastProcedTimestamp);
             if (byEntity.World.Calendar.ElapsedSeconds - lastProcedTimestamp < 60) return;
             if (byEntity.World is IClientWorldAccessor clientWorldAccessor)
             {

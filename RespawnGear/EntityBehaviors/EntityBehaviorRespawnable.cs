@@ -49,8 +49,7 @@ namespace RespawnGear.EntityBehaviors
             if (Tree == null)
             {
                 Tree = new TreeAttribute();
-                Timestamp = -1;
-                Charges = RespawnGearModSystem.Config.InitCharges;
+                DefaultValues();
             }
         }
 
@@ -63,23 +62,34 @@ namespace RespawnGear.EntityBehaviors
             Position = pos;
             Yaw = yaw;
             Pitch = pitch;
+            Timestamp = entity.World.Calendar.TotalHours;
             CalculateTimestampAndCharges();
         }
 
         /// <summary> Updates the current timestamp and adds the corresponding charges </summary>
         public void CalculateTimestampAndCharges()
         {
-            if (Timestamp == -1) Timestamp = entity.World.Calendar.TotalHours;
-            else
+            if (Timestamp != -1)
             {
                 double hoursPerCharge = RespawnGearModSystem.Config.HoursPerCharge;
+                int maxCharges = RespawnGearModSystem.Config.MaxCharges;
 
                 double elapsed = entity.World.Calendar.TotalHours - Timestamp;
                 int chargesGained = (int) (elapsed / hoursPerCharge);
 
-                Charges = Math.Clamp(Charges + chargesGained, 0, RespawnGearModSystem.Config.MaxCharges);
-                Timestamp = entity.World.Calendar.TotalHours - (elapsed % hoursPerCharge);
+                Charges = Math.Clamp(Charges + chargesGained, 0, maxCharges);
+                
+                if (Charges == maxCharges) Timestamp = entity.World.Calendar.TotalHours;
+                else Timestamp = entity.World.Calendar.TotalHours - (elapsed % hoursPerCharge);
             }
+        }
+
+        /// <summary> Sets the default starting values </summary>
+        public void DefaultValues()
+        {
+            Timestamp = -1;
+            Charges = RespawnGearModSystem.Config.InitCharges;
+            Position = Vec3i.Zero;
         }
 
         /// <summary> Outsources tree insertion by receiving a lambda that expects an <see cref="ITreeAttribute"/> </summary>

@@ -64,7 +64,7 @@ namespace RespawnGear.EntityBehaviors
             Position = pos;
             Yaw = yaw;
             Pitch = pitch;
-            Timestamp = entity.World.Calendar.TotalHours;
+            if (Timestamp == -1) Timestamp = entity.World.Calendar.TotalHours;
             CalculateTimestampAndCharges();
         }
 

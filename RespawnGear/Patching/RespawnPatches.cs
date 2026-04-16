@@ -11,8 +11,6 @@ namespace RespawnGear.Patching
     {
         public static class SpawnPositionPatch
         {
-            private static Dictionary<string, double> playerDeaths = [];
-
             public static bool Prefix(ServerMain __instance, ref FuzzyEntityPos __result, string playerUID)
             {
                 EntityPlayer playerEntity = __instance.PlayerByUid(playerUID).Entity;
@@ -28,9 +26,9 @@ namespace RespawnGear.Patching
                         SendMessage(playerEntity.Player, $"The player {playerEntity.GetName()} has no charges left, into the wilderness you go");
                         return true;
                     }
-                    double now = playerEntity.World.Calendar.TotalHours;
-                    if (playerDeaths.TryGetValue(playerUID, out double value) && now - value < 1f / 60f) return true;
-                    playerDeaths[playerUID] = now;
+                    if (respawnable.isChargeConsumed) return true;
+                    respawnable.isChargeConsumed = true;
+                    playerEntity.World.RegisterCallback((float t) => respawnable.isChargeConsumed = false, 1000);
                     respawnable.Charges -= 1;
                     SendMessage(playerEntity.Player, $"The player {playerEntity.GetName()} has {respawnable.Charges} charges left");
                     FuzzyEntityPos fuzzyEntityPos = new(

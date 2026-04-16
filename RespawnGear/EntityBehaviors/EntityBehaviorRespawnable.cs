@@ -11,6 +11,8 @@ namespace RespawnGear.EntityBehaviors
         public static readonly string BEHAVIOR_ID = "respawninfo";
         public override string PropertyName() => BEHAVIOR_ID;
 
+        public bool isChargeConsumed = false;
+
         #region Properties
         ITreeAttribute Tree
         {

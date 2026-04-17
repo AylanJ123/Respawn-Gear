@@ -6,7 +6,6 @@ using Vintagestory.API.Client;
 using Vintagestory.API.Common;
 using Vintagestory.API.MathTools;
 using Vintagestory.API.Util;
-using Vintagestory.GameContent;
 
 namespace RespawnGear.ItemClasses
 {
@@ -52,6 +51,7 @@ namespace RespawnGear.ItemClasses
             if (world is IClientWorldAccessor)
             {
                 GuiTransform.Rotation.Y = GameMath.Mod(world.ElapsedMilliseconds / 25f, 360f);
+                GuiTransform.Translation.Y = (float) Math.Sin(world.ElapsedMilliseconds / 500f);
             }
         }
 
@@ -62,9 +62,9 @@ namespace RespawnGear.ItemClasses
             if (entityItem.World is IClientWorldAccessor)
             {
                 GroundTransform.Rotation.Y = GameMath.Mod(entityItem.World.ElapsedMilliseconds / 25f, 360f);
+                GroundTransform.Translation.Y = MathF.Sin(entityItem.World.ElapsedMilliseconds / 500f) * 0.1f + 0.1f;
 
                 Particles.MinQuantity = 1f;
-
                 SpawnParticles(entityItem.World, entityItem.Pos.XYZ, final: false);
             }
         }
@@ -77,6 +77,7 @@ namespace RespawnGear.ItemClasses
             {
                 FpHandTransform.Rotation.Y = GameMath.Mod((-byEntity.World.ElapsedMilliseconds) / 25f, 360f);
                 TpHandTransform.Rotation.Y = GameMath.Mod((-byEntity.World.ElapsedMilliseconds) / 25f, 360f);
+                // No need to change the vertical translation here, the seraph is holding it in place.
             }
         }
 

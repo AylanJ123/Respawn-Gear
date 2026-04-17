@@ -2,7 +2,7 @@
   "Type": "Code",
   "TextureSize": 32,
   "Name": "Respawn Gear",
-  "Version": "1.1.0",
+  "Version": "1.1.1",
   "NetworkVersion": null,
   "IconPath": "modicon.png",
   "Description": "Adds a recharging gear that sets your respawn location.",

@@ -1,13 +1,10 @@
 ﻿using System;
 using HarmonyLib;
-using System.Reflection;
 using Vintagestory.API.Common;
 using Vintagestory.API.Server;
-using Vintagestory.Server;
 using RespawnGear.EntityBehaviors;
 using RespawnGear.ItemClasses;
 using RespawnGear.Misc;
-using RespawnGear.Patching;
 
 namespace RespawnGear
 {
@@ -48,15 +45,8 @@ namespace RespawnGear
                 $"{Mod.Info.ModID}:{EntityBehaviorRespawnable.BEHAVIOR_ID}",
                 typeof(EntityBehaviorRespawnable)
             );
-            MethodInfo originalMethod = AccessTools.Method(typeof(ServerMain), nameof(ServerMain.GetSpawnPosition));
-            MethodInfo prefixMethod = SymbolExtensions.GetMethodInfo(() => RespawnPatches.SpawnPositionPatch.Prefix);
-            Patches patches = Harmony.GetPatchInfo(originalMethod);
-            if (Harmony != null && patches != null && patches.Owners.Contains(Harmony.Id))
-            {
-                ModHelper.Logger.Error("Method is already patched but the code to kickstart the server side ran again, why? Skipping patch.");
-                return;
-            }
-            Harmony?.Patch(originalMethod, new HarmonyMethod(prefixMethod));
+
+            Harmony?.PatchAll();
         }
 
         public override void Dispose()

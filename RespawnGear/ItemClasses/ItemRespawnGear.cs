@@ -11,7 +11,7 @@ namespace RespawnGear.ItemClasses
 {
     public class ItemRespawnGear : Item
     {
-        public static readonly string ITEM_ID = "respawngear";
+        public static readonly string ITEM_ID = "ItemRespawnGear";
 
         private SimpleParticleProperties? particles;
         private float lastProcedTimestamp;

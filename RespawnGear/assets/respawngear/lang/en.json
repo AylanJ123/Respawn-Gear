@@ -1,4 +1,5 @@
 {
-	"item-respawngear": "Respawn Gear",
-	"itemdesc-respawngear": "<font color=\"#99c9f9\"><i>Allows to place a special respawn point. This does not override a Temporal Gear's spawn point. Player will appear here after meeting death if there the gear is charged. The gear charges itself over time.'</i></font><br>"
+	"item-respawngear": "Respawn gear",
+	"itemdesc-respawngear": "Can be used to set a 'respawn point'. Does not override a Temporal Gear's returning point.\n\n<font color=\"#99c9f9\"><i>It radiates an eerie burnt pink light. There is a sense of hollowness, as though it only serves to channel whatever it is the owner possesses.</i></font>",
+	"item-clothes-neck-gear-amulet-respawn": "Respawn gear amulet"
 }

@@ -1,0 +1,36 @@
+[
+  {
+    "ingredientPattern": "R,S",
+    "ingredients": {
+      "R": {
+        "type": "item",
+        "code": "game:rope"
+      },
+      "S": {
+        "type": "item",
+        "code": "respawngear"
+      }
+    },
+    "width": 1,
+    "height": 2,
+    "output": {
+      "type": "item",
+      "code": "clothes-neck-gear-amulet-respawn"
+    }
+  },
+  {
+    "ingredientPattern": "S",
+    "ingredients": {
+      "S": {
+        "type": "item",
+        "code": "clothes-neck-gear-amulet-respawn"
+      }
+    },
+    "width": 1,
+    "height": 1,
+    "output": {
+      "type": "item",
+      "code": "respawngear"
+    }
+  }
+]

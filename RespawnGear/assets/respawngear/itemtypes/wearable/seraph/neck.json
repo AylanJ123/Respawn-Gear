@@ -1,8 +1,10 @@
 {
   "code": "respawngear:clothes-neck-gear-amulet-respawn",
-  "class": "ItemWearable",
   "shape": { "base": "entity/humanoid/seraph/clothing/neck/gear-amulet-respawn" },
   "storageFlags": 128,
+  "behaviors": [
+    { "name": "Wearable" }
+  ],
   "attributes": {
     "clothescategory": "neck",
     "wearableAttachment": true,
@@ -33,7 +35,7 @@
     "clothing": [ "*" ]
   },
   "renderAlphaTest": 0.25,
-  "lightHsv":  [60, 7, 4],
+  "lightHsv": [ 60, 7, 4 ],
   "fpHandTransform": {
     "translation": {
       "x": 0.2,
